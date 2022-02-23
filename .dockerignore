@@ -1,0 +1,10 @@
+*
+!alembic/
+!app/
+!docker/entrypoint.sh
+!docker/wait-for-it.sh
+!alembic.ini
+!gunicorn.conf.py
+!Pipfile
+!Pipfile.lock
+**/__pycache__/

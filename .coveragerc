@@ -1,0 +1,6 @@
+[run]
+# https://coverage.readthedocs.io/en/latest/config.html#run
+# https://github.com/nedbat/coveragepy/issues/1082
+concurrency =
+    thread
+    greenlet

@@ -1,0 +1,11 @@
+[MASTER]
+
+extension-pkg-whitelist=pydantic
+
+[MESSAGES CONTROL]
+
+disable=C,too-few-public-methods
+
+[TYPECHECK]
+
+ignored-modules=alembic

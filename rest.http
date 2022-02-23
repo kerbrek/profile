@@ -1,0 +1,49 @@
+###
+POST http://127.0.0.1:8000/profiles/
+Content-Type: application/json
+
+{
+  "name": "John",
+  "sex": 1,
+  "device_list": [
+    "Mobile"
+  ]
+}
+
+
+###
+GET http://127.0.0.1:8000/profiles/?skip=0&limit=10
+
+
+###
+GET http://127.0.0.1:8000/profiles/1
+
+
+###
+PUT http://127.0.0.1:8000/profiles/1
+Content-Type: application/json
+
+{
+  "number_of_purchases": 3,
+  "avg_price_of_cart": 1000,
+  "days_since_last_purchase": 2,
+  "last_purchase_date": "2022-02-21T17:59:44.807Z",
+  "average_days_beetween_purchases": 2,
+  "average_number_of_purchases": 1,
+  "device_list": [
+    "Mobile", "Web"
+  ],
+  "locations_list": [
+    "russia"
+  ],
+  "last_seen_location": {
+    "latitude": 55.753797,
+    "longitude": 37.6212683
+  }
+}
+
+
+###
+DELETE http://127.0.0.1:8000/profiles/1
+
+###
