@@ -5,6 +5,12 @@ SHELL := /usr/bin/env bash
 project := profile
 app_dir := app
 
+docker_user := kerbrek
+docker_image := profile-web
+
+git_commit := $(shell git rev-parse --short HEAD)
+git_branch := $(shell git rev-parse --abbrev-ref HEAD)
+
 .PHONY: setup # Setup a working environment
 setup:
 	env PIPENV_VENV_IN_PROJECT=1 pipenv install --dev
@@ -121,6 +127,25 @@ up-debug:
 .PHONY: down-debug # Stop Compose services (debug)
 down-debug:
 	docker-compose -p ${project} -f docker/docker-compose.debug.yml down
+
+.PHONY: build # Build Docker image
+build:
+	docker build --pull \
+		--file docker/Dockerfile \
+		--tag ${docker_image}:${git_commit} \
+		--tag ${docker_image}:latest \
+		.
+
+.PHONY: release # Push Docker image to the registry
+release: build
+	docker tag ${docker_image}:${git_commit} ${docker_user}/${docker_image}:${git_commit}
+	docker tag ${docker_image}:latest ${docker_user}/${docker_image}:latest
+	docker push ${docker_user}/${docker_image}:${git_commit}
+	docker push ${docker_user}/${docker_image}:latest
+
+.PHONY: deploy # Deploy application
+deploy:
+	cd ansible/ && ansible-playbook playbook.yml -i inventory.ini
 
 .PHONY: help # Print list of targets with descriptions
 help:

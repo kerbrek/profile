@@ -1,0 +1,73 @@
+---
+services:
+  web:
+    image: {{ docker_user }}/profile-web:latest
+    restart: always
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+    environment:
+      - POSTGRES_HOST={{ postgres_host }}
+      - POSTGRES_PORT={{ postgres_port }}
+      - POSTGRES_PASSWORD={{ postgres_password }}
+      - POSTGRES_USER={{ postgres_user }}
+      - POSTGRES_DB={{ postgres_db }}
+
+    # depends_on:
+    #   - db
+
+
+  # db:
+  #   image: postgres:13-alpine
+  #   restart: always
+
+  #   logging:
+  #     driver: json-file
+  #     options:
+  #       max-size: "10m"
+  #       max-file: "5"
+
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+
+  #   environment:
+  #     - POSTGRES_PASSWORD={{ postgres_password }}
+  #     - POSTGRES_USER={{ postgres_user }}
+  #     - POSTGRES_DB={{ postgres_db }}
+
+
+  ## NGINX-LE  https://github.com/nginx-le/nginx-le
+  nginx:
+    image: umputun/nginx-le:latest
+    restart: always
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+    volumes:
+      - ./etc/ssl:/etc/nginx/ssl
+      - ./etc/service.conf:/etc/nginx/service.conf
+
+    ports:
+      - "80:80"
+      - "443:443"
+
+    environment:
+      - TZ=UTC
+      - LETSENCRYPT=true
+      - LE_EMAIL={{ le_email }}
+      - LE_FQDN={{ le_domain }}
+
+    depends_on:
+      - web
+
+
+# volumes:
+#   postgres_data:
