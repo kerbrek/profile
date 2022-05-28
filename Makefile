@@ -2,6 +2,12 @@
 
 SHELL := /usr/bin/env bash
 
+ifeq ($(shell uname -s), Linux)
+	OPEN := xdg-open
+else
+	OPEN := open
+endif
+
 project := profile
 app_dir := app
 
@@ -52,10 +58,12 @@ test: prepare-test-containers
 coverage: prepare-test-containers
 	@sleep 1
 	@trap '${stop-prepared-test-containers}' EXIT && \
+		rm -rf htmlcov/ && \
 		echo Starting tests... && \
 		env PIPENV_DOTENV_LOCATION=.env.example \
 			pipenv run env POSTGRES_PORT=5433 \
-			pytest --cov-report term-missing:skip-covered --cov=${app_dir} tests/
+			pytest --cov-report html --cov-report term --cov=${app_dir} tests/ && \
+		${OPEN} htmlcov/index.html
 
 .PHONY: prepare-temp-containers
 prepare-temp-containers:

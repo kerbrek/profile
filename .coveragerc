@@ -4,3 +4,7 @@
 concurrency =
     thread
     greenlet
+
+[report]
+skip_covered = true
+skip_empty = true
